@@ -7,7 +7,8 @@ const router = express.Router()
 // * Show all movies route
 router.get('/movies', async (req, res, next) => {
     try {
-        const movies = await movie.find()
+        const movies = await Movie.find()
+        console.log(`get movies: ${movies}`)
 
         return res.json(movies)
     } catch (error) {
@@ -19,7 +20,7 @@ router.get('/movies', async (req, res, next) => {
 router.get('/movies/:movieId', async (req, res, next) => {
     try {
         const { movieId } = req.params
-        const movie = await movie.findById(movieId)
+        const movie = await Movie.findById(movieId)
 
         if(!movie) return res.status(404).json({ message: 'Movie not found' })
 

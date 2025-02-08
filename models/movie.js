@@ -8,7 +8,7 @@ const movieSchema = new mongoose.Schema({
     },
 
     year: {
-        type: integer,
+        type: Number,
         required: true
     },
     
@@ -52,9 +52,7 @@ const movieSchema = new mongoose.Schema({
         ref: "User",
     }],
 
-    reviews: [reviewSchema]
+    // reviews: [reviewSchema]
 })
-
-
 
 export default mongoose.model("Movies", movieSchema)

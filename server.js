@@ -7,6 +7,9 @@ import cors from "cors"
 import logger from "./middleware/logger.js"
 import errorHandler from "./middleware/errorHandler.js"
 
+// Controllers/Routers
+import movieController from './controllers/movieController.js'
+
 const app = express()
 const port = process.env.port || 3000 //# use PORT env variable if it exists, otherwise use 3000
 
@@ -15,6 +18,9 @@ app.use(express.json()) //# parses JSON body type, adding them to the req.body
 app.use(mongoSanitize()) //# prevent cody injections
 app.use(logger) //# logs out key information on incoming requests
 app.use(errorHandler)
+
+// Controllers / Routes
+app.use('/', movieController)
 
 //? Server connection
 const establishServerConnections = async () => {
