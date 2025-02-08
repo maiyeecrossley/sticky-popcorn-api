@@ -9,6 +9,7 @@ import errorHandler from "./middleware/errorHandler.js"
 
 // Controllers/Routers
 import movieController from './controllers/movieController.js'
+import reviewController from "./controllers/reviewController.js"
 
 const app = express()
 const port = process.env.port || 3000 //# use PORT env variable if it exists, otherwise use 3000
@@ -21,6 +22,7 @@ app.use(errorHandler)
 
 // Controllers / Routes
 app.use('/', movieController)
+app.use('/', reviewController)
 
 //? Server connection
 const establishServerConnections = async () => {
