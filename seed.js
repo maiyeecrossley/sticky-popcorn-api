@@ -30,6 +30,7 @@ const seedDatabase = async () => {
         content: review.content,
         author: users[Math.floor(Math.random() * users.length)]._id,
         movieId: newMovies.find((movie) => movie.title === review.title)._id
+
       })))
 
       console.log(`${reviews.length} reviews added`)
