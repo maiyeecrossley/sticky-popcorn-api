@@ -33,7 +33,7 @@ const seedDatabase = async () => {
       const reviews = await Review.create(reviewData.map(review => ({
         content: review.content,
         author: users[Math.floor(Math.random() * users.length)]._id,
-        movie: movieMap[review.title] || newMovies[0]._id
+        movie: movieMap
       })))
 
       console.log(`${reviews.length} reviews added`)
