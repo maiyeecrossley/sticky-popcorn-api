@@ -36,21 +36,23 @@ const userSchema = new mongoose.Schema({
 })
 
 userSchema.pre('save', function(next) {
-  // 'this' refers to the doc you're about to save.
-  // this line replaces the password with the hashed password.
-  // isModified ensures we are actually trying to create or modify a password, ensuring we don't hash an already hashed password
+
+  
   if (this.isModified('password')){
     this.password = bcrypt.hashSync(this.password, bcrypt.genSaltSync())
   }
-  next() // this tells mongoose we're done.
+  next() 
 })
 
-// This method is available on an user document, and allows us to check if a plain text password matches a stored hash, returning a boolean
+
+
 userSchema.methods.isPasswordValid = function(plainTextPassword){
   const isValid = bcrypt.compareSync(plainTextPassword, this.password)
   console.log(`Password is valid: ${isValid}`)
   return isValid
 }
+
+
 
 const User = mongoose.model('User', userSchema)
 export default User
