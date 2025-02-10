@@ -35,9 +35,13 @@ const userSchema = new mongoose.Schema({
   }
 })
 
-userSchema.pre('save', function(next) {
+userSchema.set('toJSON', {
+  transform(doc, json){
+    delete json.password
+  }
+})
 
-  
+userSchema.pre('save', function(next) {  
   if (this.isModified('password')){
     this.password = bcrypt.hashSync(this.password, bcrypt.genSaltSync())
   }
