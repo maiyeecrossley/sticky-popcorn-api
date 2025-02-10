@@ -36,6 +36,7 @@ const userSchema = new mongoose.Schema({
 })
 
 userSchema.pre('save', function(next) {
+
   
   if (this.isModified('password')){
     this.password = bcrypt.hashSync(this.password, bcrypt.genSaltSync())
@@ -44,11 +45,13 @@ userSchema.pre('save', function(next) {
 })
 
 
+
 userSchema.methods.isPasswordValid = function(plainTextPassword){
   const isValid = bcrypt.compareSync(plainTextPassword, this.password)
   console.log(`Password is valid: ${isValid}`)
   return isValid
 }
+
 
 
 const User = mongoose.model('User', userSchema)
