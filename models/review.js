@@ -39,6 +39,10 @@ const reviewSchema = new mongoose.Schema({
     timestamps: true
 })
 
-
+reviewSchema.set('toJSON', {
+    transform(doc, json){
+      delete json.password
+    }
+  })
 
 export default mongoose.model("Review", reviewSchema)
