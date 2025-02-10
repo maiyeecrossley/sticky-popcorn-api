@@ -16,10 +16,10 @@ const router = express.Router()
 
 
 //* SINGLE REVIEW
-router.get("/movies/:movieId/reviews/reviewId", async (req, res, next) => {
+router.get("/movies/:movieId/reviews/:reviewId", async (req, res, next) => {
     try {
         const { reviewId } = req.params
-        const review = await Review.findById(reviewId).populate("author").populate("review.author")
+        const review = await Review.findById(reviewId).populate("author")
 
         if(!review) 
             return res.status(404).json({ message: "Review not found" })
