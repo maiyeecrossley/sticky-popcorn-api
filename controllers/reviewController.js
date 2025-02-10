@@ -16,10 +16,10 @@ const router = express.Router()
 
 
 //* SINGLE REVIEW
-router.get("/movies/:movieId/reviews/reviewId", async (req, res, next) => {
+router.get("/movies/:movieId/reviews/:reviewId", async (req, res, next) => {
     try {
         const { reviewId } = req.params
-        const review = await Review.findById(reviewId).populate("author").populate("review.author")
+        const review = await Review.findById(reviewId).populate("author")
 
         if(!review) 
             return res.status(404).json({ message: "Review not found" })
@@ -54,7 +54,7 @@ router.delete("/movies/:movieId/reviews/:reviewId", validateToken, async (req, r
         if(!review) 
             return res.status(404).json({ message: "Review not found" })
         
-        if(!req.user._id.equals(review.author))
+        if(!req.user._id.equals(author))
             return res.status(403).json({ message: "You do not have permission to remove this review" })
 
         await review.findByIdAndDelete(reviewId)
