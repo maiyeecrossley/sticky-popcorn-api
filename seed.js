@@ -25,15 +25,12 @@ const seedDatabase = async () => {
       const users = await User.create(userData)
       console.log(`${users.length} users created`)
 
-      const movieMap = {}
-      movies.forEach(movie => {
-        movieMap[movie.title] = movie._id
-      })
 
       const reviews = await Review.create(reviewData.map(review => ({
         content: review.content,
         author: users[Math.floor(Math.random() * users.length)]._id,
-        movie: movieMap
+        movieId: newMovies.find((movie) => movie.title === review.title)._id
+
       })))
 
       console.log(`${reviews.length} reviews added`)

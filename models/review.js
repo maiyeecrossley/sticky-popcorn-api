@@ -27,6 +27,11 @@ const reviewSchema = new mongoose.Schema({
         required: true,
     },
       
+    movieId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Movie"
+    }, 
+    
     likes: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
