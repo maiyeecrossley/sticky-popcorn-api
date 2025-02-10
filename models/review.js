@@ -30,10 +30,12 @@ const reviewSchema = new mongoose.Schema({
     likes: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-    }],
+    }]
+},
     
 //   reponses: [responseSchema] 
-// }, {
+// }, 
+{
     timestamps: true
 })
 
