@@ -30,19 +30,6 @@ router.get('/movies/:movieId', async (req, res, next) => {
     }
 })
 
-// * Show reviews route
-router.get('/movies/:movieId/reviews', async (req, res, next) => {
-    try {
-        const { movieId } = req.params
-        const movie = await movie.findById(movieId).populate('author').populate('review.author')
-
-        if(!movie) return res.status(404).json({ message: 'Movie not found' })
-
-        return res.json(movie)
-    } catch (error) {
-        next(error)
-    }
-})
 
 // * Likes route
 router.put('/movies/:movieId/likes', validateToken, async (req, res, next) => {

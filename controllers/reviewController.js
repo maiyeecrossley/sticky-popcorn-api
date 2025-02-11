@@ -5,6 +5,24 @@ import Movie from "../models/movie.js"
 
 const router = express.Router()
 
+//* ALL REVIEWS FOR GIVEN MOVIE
+router.get("/movies/:movieId/reviews", async (req, res, next) => {
+    try {
+        const { movieId } = req.params
+        const movie = await Movie.findById(movieId)
+        console.log("movie found", movie)
+        
+        if(!movie) {
+            return res.status(404).json ({ message: "Movie not found" })
+        }
+        const reviews = await Review.find({ movieId: movieId })
+            return res.json(reviews)
+    } catch (error) {
+        console.error("Error in GET /movies/:movieId/reviews:", error)
+        next(error)
+    }
+})
+
 
 //* SINGLE REVIEW
 router.get("/movies/:movieId/reviews/:reviewId", async (req, res, next) => {
