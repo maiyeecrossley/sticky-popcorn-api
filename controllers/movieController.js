@@ -30,6 +30,21 @@ router.get('/movies/:movieId', async (req, res, next) => {
     }
 })
 
+// * Show single movie route
+router.get('/movies/user/:userId', validateToken, async (req, res, next) => {
+    try {
+        const { userId } = req.params
+        const user = await User.find(userId)
+        console.log(user)
+
+        // if(!movie) return res.status(404).json({ message: 'Movie not found' })
+
+        return res.json(favourites)
+    } catch (error) {
+        next(error)
+    }
+})
+
 
 // * Likes route
 router.put('/movies/:movieId/likes', validateToken, async (req, res, next) => {
