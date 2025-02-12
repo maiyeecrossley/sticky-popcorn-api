@@ -50,7 +50,7 @@ router.post("/movies/:movieId/reviews", validateToken, async (req, res, next) =>
     try {
         req.user
         req.body.author = req.user._id
-        req.body.movie = req.params.movieId
+        req.body.movieId = req.params.movieId
         const postReview = await Review.create(req.body)
             
             return res.json(postReview)

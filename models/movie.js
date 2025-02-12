@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Mongoose } from "mongoose";
 
 const movieSchema = new mongoose.Schema({
 
@@ -51,6 +51,11 @@ const movieSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     }],
+
+    rating: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    }]
 
     // reviews: [reviewSchema]
 })
