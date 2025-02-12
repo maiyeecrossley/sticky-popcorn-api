@@ -1,5 +1,6 @@
 import express from 'express'
 import validateToken from '../middleware/validateToken.js'
+import User from '../models/user.js'
 import Movie from '../models/movie.js'
 
 const router = express.Router()
@@ -8,7 +9,6 @@ const router = express.Router()
 router.get('/movies', async (req, res, next) => {
     try {
         const movies = await Movie.find()
-        console.log(`get movies: ${movies}`)
 
         return res.json(movies)
     } catch (error) {
@@ -30,60 +30,80 @@ router.get('/movies/:movieId', async (req, res, next) => {
     }
 })
 
-// * Show single movie route
-router.get('/movies/user/:userId', validateToken, async (req, res, next) => {
+// * Show user favourite movies
+router.get('/movies/:userId/favourites', validateToken, async (req, res, next) => {
     try {
         const { userId } = req.params
-        const user = await User.find(userId)
+        const user = await User.findById(userId).populate("favourites")
         console.log(user)
 
-        // if(!movie) return res.status(404).json({ message: 'Movie not found' })
+        if(!User) return res.status(404).json({ message: 'User not found' })
 
-        return res.json(favourites)
+        return res.json(user.favourites)
     } catch (error) {
         next(error)
     }
 })
 
-
-// * Likes route
-router.put('/movies/:movieId/likes', validateToken, async (req, res, next) => {
+// * Show user watchlist
+router.get('/movies/:userId/watchlist', validateToken, async (req, res, next) => {
     try {
+        const { userId } = req.params
+        const user = await User.findById(userId).populate("watchlist")
+
+        if(!User) return res.status(404).json({ message: 'User not found' })
+
+        return res.json(user.watchlist)
+    } catch (error) {
+        next(error)
+    }
+})
+
+// * Add movie to favourites
+router.put('/movies/:movieId/favourites', validateToken, async (req, res, next) => {
+    try {
+        const userId = req.user._id
         const { movieId } = req.params
-        const movie = await movie.findById(movieId)
+
+        const movie = await Movie.findById(movieId)
 
         if(!movie) return res.status(404).json({ message: 'Movie not found' })
+        if(!userId) return res.status(404).json({ message: 'User not found' })
 
-        const alreadyLiked = movie.likes.includes(req.user._id)
+        const alreadyLiked = req.user.favourites.includes(movieId)
 
-        const updatedMovie = await Movie.findByIdAndUpdate(movieId, {
-            [alreadyLiked ? '$pull' : '$addToSet']: { likes: req.user._id }
-          }, { returnDocument: 'after' })
+        const updatedFavs = await User.findByIdAndUpdate(userId, {
+            [alreadyLiked ? '$pull' : '$addToSet']: { favourites: movieId }
+        }, { returnDocument: 'after' })
           
-          return res.json(updatedMovie)
+        return res.json(updatedFavs)
     } catch (error) {
         next(error)
     }
 })
 
-// * Watchlist route
+// * Add movie to watchlist
 router.put('/movies/:movieId/watchlist', validateToken, async (req, res, next) => {
     try {
+        const userId = req.user._id
         const { movieId } = req.params
-        const movie = await movie.findById(movieId)
+        
+        const movie = await Movie.findById(movieId)
 
         if(!movie) return res.status(404).json({ message: 'Movie not found' })
+        if(!userId) return res.status(404).json({ message: 'User not found' })
 
-        const alreadyListed = movie.watchlist.includes(req.user._id)
+        const alreadyAdded = req.user.watchlist.includes(movieId)
 
-        const updatedMovie = await Movie.findByIdAndUpdate(movieId, {
-            [alreadyListed ? '$pull' : '$addToSet']: { likes: req.user._id }
-          }, { returnDocument: 'after' })
+        const updatedWatchlist = await User.findByIdAndUpdate(userId, {
+            [alreadyAdded ? '$pull' : '$addToSet']: { watchlist: movieId }
+        }, { returnDocument: 'after' })
           
-          return res.json(updatedMovie)
+        return res.json(updatedWatchlist)
     } catch (error) {
         next(error)
     }
 })
+
 
 export default router

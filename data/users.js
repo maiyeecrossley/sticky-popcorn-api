@@ -2,9 +2,7 @@ export default [
     {
       "username": "moviebuff1",
       "email": "moviebuff1@moviebuff1.com",
-      "password": "Password123!",
-      "favourites": ["67a76ba380712aa1f6bb3a11","67a76ba380712aa1f6bb3a14"],
-      "watchlist": ["67a76ba380712aa1f6bb3a12","67a76ba380712aa1f6bb3a16"]
+      "password": "Password123!"
     },
     {
       "username": "cinemalover",

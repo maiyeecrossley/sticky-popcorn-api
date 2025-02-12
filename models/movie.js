@@ -60,4 +60,4 @@ const movieSchema = new mongoose.Schema({
     // reviews: [reviewSchema]
 })
 
-export default mongoose.model("Movies", movieSchema)
+export default mongoose.model("Movie", movieSchema)

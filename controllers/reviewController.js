@@ -53,7 +53,7 @@ router.post("/movies/:movieId/reviews", validateToken, async (req, res, next) =>
         req.body.movieId = req.params.movieId
         const postReview = await Review.create(req.body)
             
-            return res.json(postReview)
+        return res.json(postReview)
     } catch (error) {
         next(error)
     }

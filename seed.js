@@ -22,9 +22,17 @@ const seedDatabase = async () => {
       const newMovies = await Movie.create(movies)
       console.log(`${movies.length} posts created`)
 
-      const users = await User.create(userData)
-      console.log(`${users.length} users created`)
+      const userWithFavMovies = {
+        ...userData[0],
+        favourites: [newMovies[0]._id, newMovies[1]._id]
+      }
 
+      await User.create(userWithFavMovies)
+      console.log('user created with favs')
+
+      const remainingUsers = userData.slice(1)
+      const users = await User.create(remainingUsers)
+      console.log(`${users.length} users created`)
 
       const reviews = await Review.create(reviewData.map(review => ({
         content: review.content,
@@ -35,7 +43,6 @@ const seedDatabase = async () => {
 
       console.log(`${reviews.length} reviews added`)
 
-  
       await mongoose.connection.close()
       console.log('Database connection closed')
   

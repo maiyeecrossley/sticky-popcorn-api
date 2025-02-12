@@ -33,14 +33,14 @@ const userSchema = new mongoose.Schema({
       }
     ]
   },
-  favourites: {
-    type: [mongoose.Schema.Types.ObjectId],
+  favourites: [{
+    type: mongoose.Schema.Types.ObjectId,
     ref: "Movie"
-  },
-  watchlist: {
-    type: [mongoose.Schema.Types.ObjectId],
+  }],
+  watchlist: [{
+    type: mongoose.Schema.Types.ObjectId,
     ref: "Movie"
-  }
+  }]
 })
 
 userSchema.set('toJSON', {
@@ -56,15 +56,11 @@ userSchema.pre('save', function(next) {
   next() 
 })
 
-
-
 userSchema.methods.isPasswordValid = function(plainTextPassword){
   const isValid = bcrypt.compareSync(plainTextPassword, this.password)
   console.log(`Password is valid: ${isValid}`)
   return isValid
 }
-
-
 
 const User = mongoose.model('User', userSchema)
 export default User
