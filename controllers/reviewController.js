@@ -73,7 +73,7 @@ router.delete("/movies/:movieId/reviews/:reviewId", validateToken, async (req, r
             return res.status(403).json({ message: "You do not have permission to remove this review" })
 
         await Review.findByIdAndDelete(reviewId)
-            return res.status(204)
+            return sendStatus(204)
     } catch (error) {
         next(error)
     }
