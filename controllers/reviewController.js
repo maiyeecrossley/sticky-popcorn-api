@@ -50,7 +50,7 @@ router.post("/movies/:movieId/reviews", validateToken, async (req, res, next) =>
     try {
         req.user
         req.body.author = req.user._id
-        req.body.movie = req.params.movieId
+        req.body.movieId = req.params.movieId
         const postReview = await Review.create(req.body)
             
             return res.json(postReview)
@@ -73,7 +73,7 @@ router.delete("/movies/:movieId/reviews/:reviewId", validateToken, async (req, r
             return res.status(403).json({ message: "You do not have permission to remove this review" })
 
         await Review.findByIdAndDelete(reviewId)
-            return res.status(204)
+            return sendStatus(204)
     } catch (error) {
         next(error)
     }
