@@ -16,6 +16,33 @@ router.get('/movies', async (req, res, next) => {
     }
 })
 
+// * Show user favourite movies
+router.get('/movies/favourites', validateToken, async (req, res, next) => {
+    try {
+        const user = await User.findById(req.user._id).populate("favourites")
+        console.log(user)
+
+        if(!user) return res.status(404).json({ message: 'User not found' })
+
+        return res.json(user.favourites)
+    } catch (error) {
+        next(error)
+    }
+})
+
+// * Show user watchlist
+router.get('/movies/watchlist', validateToken, async (req, res, next) => {
+    try {
+        const user = await User.findById(req.user._id).populate("watchlist")
+
+        if(!user) return res.status(404).json({ message: 'User not found' })
+
+        return res.json(user.watchlist)
+    } catch (error) {
+        next(error)
+    }
+})
+
 // * Show single movie route
 router.get('/movies/:movieId', async (req, res, next) => {
     try {
@@ -25,35 +52,6 @@ router.get('/movies/:movieId', async (req, res, next) => {
         if(!movie) return res.status(404).json({ message: 'Movie not found' })
 
         return res.json(movie)
-    } catch (error) {
-        next(error)
-    }
-})
-
-// * Show user favourite movies
-router.get('/movies/:userId/favourites', validateToken, async (req, res, next) => {
-    try {
-        const { userId } = req.params
-        const user = await User.findById(userId).populate("favourites")
-        console.log(user)
-
-        if(!User) return res.status(404).json({ message: 'User not found' })
-
-        return res.json(user.favourites)
-    } catch (error) {
-        next(error)
-    }
-})
-
-// * Show user watchlist
-router.get('/movies/:userId/watchlist', validateToken, async (req, res, next) => {
-    try {
-        const { userId } = req.params
-        const user = await User.findById(userId).populate("watchlist")
-
-        if(!User) return res.status(404).json({ message: 'User not found' })
-
-        return res.json(user.watchlist)
     } catch (error) {
         next(error)
     }
