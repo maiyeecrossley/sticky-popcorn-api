@@ -41,23 +41,23 @@ const movieSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-      
-    likes: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-    }],
-    
-    watchlist: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-    }],
 
-    rating: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-    }]
+}, {
+    toJSON:{
+        virtuals: true
+    }
+})
 
-    // reviews: [reviewSchema]
+movieSchema.virtual('favouritedBy', {
+    foreignField: 'favourites',
+    localField: '_id',
+    ref: 'User'
+})
+
+movieSchema.virtual('watchlistBy', {
+    foreignField: 'watchlist',
+    localField: '_id',
+    ref: 'User'
 })
 
 export default mongoose.model("Movie", movieSchema)
