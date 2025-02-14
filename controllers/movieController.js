@@ -16,29 +16,15 @@ router.get('/movies', async (req, res, next) => {
     }
 })
 
-// * Show single movie route
-router.get('/movies/:movieId', async (req, res, next) => {
-    try {
-        const { movieId } = req.params
-        const movie = await Movie.findById(movieId)
-
-        if(!movie) return res.status(404).json({ message: 'Movie not found' })
-
-        return res.json(movie)
-    } catch (error) {
-        next(error)
-    }
-})
-
 // * Show user favourite movies
-router.get('/movies/:userId/favourites', validateToken, async (req, res, next) => {
+router.get('/movies/favourites', validateToken, async (req, res, next) => {
     try {
-        const { userId } = req.params
-        const user = await User.findById(userId).populate("favourites")
+
+        const user = await User.findById(req.user._id).populate("favourites")
         console.log(user)
 
-        if(!User) return res.status(404).json({ message: 'User not found' })
-
+        if(!user) return res.status(404).json({ message: 'User not found' })
+        console.log(user.favourites)
         return res.json(user.favourites)
     } catch (error) {
         next(error)
@@ -46,14 +32,27 @@ router.get('/movies/:userId/favourites', validateToken, async (req, res, next) =
 })
 
 // * Show user watchlist
-router.get('/movies/:userId/watchlist', validateToken, async (req, res, next) => {
+router.get('/movies/watchlist', validateToken, async (req, res, next) => {
     try {
-        const { userId } = req.params
-        const user = await User.findById(userId).populate("watchlist")
+        const user = await User.findById(req.user._id).populate("watchlist")
 
-        if(!User) return res.status(404).json({ message: 'User not found' })
-
+        if(!user) return res.status(404).json({ message: 'User not found' })
+        console.log(user.watchlist)
         return res.json(user.watchlist)
+    } catch (error) {
+        next(error)
+    }
+})
+
+// * Show single movie route
+router.get('/movies/:movieId', async (req, res, next) => {
+    try {
+        const { movieId } = req.params
+        const movie = await Movie.findById(movieId).populate({path:'favouritedBy',select:'_id -favourites',}).populate({path:'watchlistBy',select:'_id -watchlist',})
+
+        if(!movie) return res.status(404).json({ message: 'Movie not found' })
+
+        return res.json(movie)
     } catch (error) {
         next(error)
     }
@@ -76,7 +75,9 @@ router.put('/movies/:movieId/favourites', validateToken, async (req, res, next) 
             [alreadyLiked ? '$pull' : '$addToSet']: { favourites: movieId }
         }, { returnDocument: 'after' })
           
-        return res.json(updatedFavs)
+        const updatedMovie = await Movie.findById(movieId).populate({path: 'favouritedBy', select: '_id -favourites'})
+
+        return res.json(updatedMovie)
     } catch (error) {
         next(error)
     }
@@ -98,8 +99,10 @@ router.put('/movies/:movieId/watchlist', validateToken, async (req, res, next) =
         const updatedWatchlist = await User.findByIdAndUpdate(userId, {
             [alreadyAdded ? '$pull' : '$addToSet']: { watchlist: movieId }
         }, { returnDocument: 'after' })
-          
-        return res.json(updatedWatchlist)
+        
+        const updatedMovie = await Movie.findById(movieId).populate({path: 'watchlistBy', select: '_id -watchlist'})
+
+        return res.json(updatedMovie)
     } catch (error) {
         next(error)
     }
