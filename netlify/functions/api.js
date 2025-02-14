@@ -1,3 +1,4 @@
+import serverless from "serverless-http";
 import express from "express";
 import mongoose, {mongo} from "mongoose";
 import mongoSanitize from "express-mongo-sanitize";
